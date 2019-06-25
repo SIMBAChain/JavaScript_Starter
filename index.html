@@ -1,0 +1,143 @@
+<!-- 
+The intent of this project is to provide boilerplate Javascript for working with SIMBA Chain.
+Once Finished you will be able to generate a wallet, save a wallet, load a wallet, sign transactions with that wallet, get the balance of that wallet on the Circle-Of-Life network, and add balance to the Circle-Of-Life network.
+-->
+
+
+
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css">
+<title>Simba JS Starter</title>
+</head>
+<body class="body">
+    <div class="content">
+<header><h1>Simba JS Starter</h1></header>
+<form>
+   <input type="text" class="text" id="seedInput">
+    
+</form>
+     <br>
+    <button onclick="generateWallet()">Generate Wallet From Seed</button>
+<p id="publicKey">Public Key</p>
+<p id="privateKey">Private Key</p>
+<p id="seed">Seed</p>
+    <button onclick="SaveWallet()">Save Wallet to Local Storage</button>
+    <button onclick="LoadWallet()">Load Wallet from Local Storage</button>
+  
+  
+<h2>Sign a Transaction</h2>
+ <form>
+     <p>Input</p>
+     <textarea id="signInput" cols="40" rows="5" onfocus="this.select();">{
+         "to": "0x6ac23e492B20f7226238aBEdA7E265BFc679Fb0F",
+         "data": "0x1ea7c445000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000001300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000087465737474747474000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001c6d63625a635a30426461537232583674426649655556696d6c624c3200000000",
+        "nonce": "0x1",
+         "gasLimit": "0x2fefd8",
+         "gasPrice": "0x1"
+       }</textarea>
+</form>
+    <br>
+    <button onclick="signTransaction()">Sign Transaction</button> 
+<form>
+    <p>Output:</p>
+    <textarea id="signOutput" cols="40" rows="5" disabled></textarea>
+</form>
+    <!--     
+        <a href="info.html">More Information About This Page</a>
+        </div>
+    -->
+<!-- 
+These are the libraries needed for this project to work
+-->  
+<script src="ethers.js"></script> 
+<script src="secure-ls.js"></script>
+
+<script>
+
+    /*
+    The empty global variable 'myWallet' is declared for the purpose of storing the wallet we will generate in a place it can be accessed by other functions
+    Pretty much every function needs to use this variable
+    */
+    var myWallet;
+    
+    function generateWallet() {
+/*
+This function generates the wallet based off of the value of the 'seedInput' in the HTML5 form just below the <header>
+The seed should be 12 words
+This seed generates the public and private key of your wallet
+*/
+
+//Here we get the 12 word phrase
+let mnemonic = document.getElementById("seedInput").value;
+
+//Here the wallet is actually generated
+let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
+console.log(mnemonicWallet.address);
+document.getElementById("publicKey").innerHTML = mnemonicWallet.address;
+document.getElementById("privateKey").innerHTML = mnemonicWallet.privateKey;
+document.getElementById("seed").innerHTML = mnemonicWallet.mnemonic;
+//Here we assign the wallet to the global variable myWallet
+myWallet = mnemonicWallet;
+    }
+    
+function signTransaction() {
+//This is where signing takes place
+    if (myWallet)
+        {
+//we grab the text value from 'signInput' and run the tryParseJson function found below
+    let transaction = tryParseJSON(document.getElementById("signInput").value);
+            //that json is then signed here
+    let signPromise = myWallet.sign (transaction);
+    signPromise.then((signedTransaction)=>{
+    document.getElementById("signOutput").value = signedTransaction;
+        });
+        }
+    else {
+        //if no wallet is found this alert runs
+        alert("Generate wallet before signing");
+    }
+}
+    function tryParseJSON (jsonString){
+        //we parse the json here
+      try {
+        var o = JSON.parse(jsonString);
+
+        // Handle non-exception-throwing cases:
+        // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
+        // but... JSON.parse(null) returns null, and typeof null === "object",
+        // so we must check for that, too. Thankfully, null is falsey, so this suffices:
+        if (o && typeof o === "object") {
+          return o;
+        }
+      }
+      catch (e) { }
+
+      return false;
+    };
+    
+    //Save and load wallets
+    
+    function SaveWallet() {
+        if (myWallet)
+            {
+        //we save the 12 word wallet seed then on load we will generate everything else
+        //SecureLS is used because it does not store the 12 words in plain text
+        //If you wanted to you could make it where the user had to put in a password to unlock their account
+        let ls = new SecureLS();
+        ls.set('walletSeed', {data:myWallet.mnemonic});
+            }
+        else{
+            alert("No wallet present to save");
+        }
+    }
+    function LoadWallet() {
+        //the wallet is loaded and generate wallet is ran to populate the fields
+        //while not the best code to get the seed to the generate wallet function we set the value of 'walletSeed' to the data we just loaded
+        //on an actual application you may want to run this code on startup
+         let ls = new SecureLS()
+        document.getElementById("seedInput").value = ls.get('walletSeed').data;
+        generateWallet()
+    }
+    
+</script>    
+</body>
