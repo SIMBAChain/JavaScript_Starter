@@ -20,5 +20,5 @@ While no networking is done within this demo code your Simba app will require co
 For this task you may want to consider using a library to make this easier such as Axios.
 * https://github.com/axios/axios
 
-#View the project on Github pages
+# View the project on Github pages
 * https://simbachain.github.io/JavaScript_Starter/
