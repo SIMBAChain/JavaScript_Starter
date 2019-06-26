@@ -6,7 +6,7 @@ and signing transactions using that wallet.
 
 The code some requires additions and modifications for usage withing a smart contract. For instance generating
 a wallet from scratch instead of just importing it.
-* note: you can generate a random seed by calling "ethers.Wallet.createRandom()"
+* note: you can generate a random wallet by calling "ethers.Wallet.createRandom()"
 
 The code uses two libraries, Secure-ls and Ethers. Secure-ls saves and loads the wallet. Ethers generates the wallet
 and signs transactions.
