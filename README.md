@@ -43,7 +43,7 @@ For this task you may want to consider using a library to make this easier such 
         myBody.append("from",USERS_PUBLIC_KEY);
        
 
-        //the post command itself
+    //the post command itself
         axios.post('https://api.simbachain.com/v1/YOUR_API_NAME/YOUR_METHOD/', myBody, {
             headers: {
                 'APIKEY' : 'YOUR API KEY HERE'
