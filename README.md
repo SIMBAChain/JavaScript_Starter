@@ -39,18 +39,23 @@ For this task you may want to consider using a library to make this easier such 
 
     //setup the form data needed for posting
         var myBody = new FormData;
-        //after myBody is declared you can append the info you need to post
-        myBody.append("from",USERS_PUBLIC_KEY);
+        
+    //after myBody is declared you can append the info you need to post
+        
+    myBody.append("from",USERS_PUBLIC_KEY);
        
 
     //the post command itself
-        axios.post('https://api.simbachain.com/v1/YOUR_API_NAME/YOUR_METHOD/', myBody, {
+    
+    axios.post('https://api.simbachain.com/v1/YOUR_API_NAME/YOUR_METHOD/', myBody, {
             headers: {
                 'APIKEY' : 'YOUR API KEY HERE'
             }})
+            
   .then(function (response) {
        //handle the response by displaying data and signing the transaction    
     })
+    
   .catch(function (error) {
     //handle error codes
   });
