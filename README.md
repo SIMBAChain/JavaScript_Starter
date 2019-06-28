@@ -38,7 +38,8 @@ For this task you may want to consider using a library to make this easier such 
 * Post
 
     //setup the form data needed for posting
-        var myBody = new FormData;
+        
+    var myBody = new FormData;
         
     //after myBody is declared you can append the info you need to post
         
@@ -53,7 +54,9 @@ For this task you may want to consider using a library to make this easier such 
             }})
             
   .then(function (response) {
-       //handle the response by displaying data and signing the transaction    
+  
+   //handle the response by displaying data and signing the transaction    
+    
     })
     
   .catch(function (error) {
